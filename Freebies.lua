@@ -1,4 +1,7 @@
--- loadstring(game:HttpGet("https://raw.githubusercontent.com/qrach/RBXProjects/main/Freebies.lua"))()
+--[[
+loadstring(game:HttpGet("https://raw.githubusercontent.com/qrach/RBXProjects/main/Freebies.lua"))()
+https://roblox.fandom.com/wiki/Event
+--]]
 local Cookie = "" -- ".ROBLOSECURITY"
 getgenv().Freebies = {
     ["WebStuff"] = false;
