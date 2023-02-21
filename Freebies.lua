@@ -17,7 +17,7 @@ local LocalPlayer = game:GetService("Players").LocalPlayer
 local MPS = game:GetService("MarketplaceService")
 
 Freebies["CheckGame"] = function(ID)
-    if Freebies.Assets[ID]
+    if Freebies.Assets[ID] then
         for _,Asset in pairs(Freebies.Assets[ID]) do
             local Owned = MPS:PlayerOwnsAsset(LocalPlayer,Asset)
             if not Owned then
