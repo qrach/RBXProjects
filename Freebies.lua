@@ -1,3 +1,4 @@
+-- loadstring(game:HttpGet("https://raw.githubusercontent.com/qrach/RBXProjects/main/Freebies.lua"))()
 local Cookie = "" -- ".ROBLOSECURITY"
 getgenv().Freebies = {
     ["WebStuff"] = false;
