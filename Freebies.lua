@@ -7,11 +7,10 @@ getgenv().Freebies = {
     ["WebStuff"] = false;
 }
 if not getgenv().Freebies then
-    getgenv().Freebies = {
-        ["WebStuff"] = true;
-        ["AutoQueue"] = true;
-    }
+    getgenv().Freebies = {}
 end
+if not Freebies.WebStuff then Freebies.WebStuff = true;
+if not Freebies.AutoQueue then Freebies.AutoQueue = true;
 
 Freebies["Assets"] = {
     ["12113006580"] = {12179151373,12179171953};
@@ -71,7 +70,7 @@ if Freebies.WebStuff then
         }
     });
 
-    --if Auth.Success then
+    if Auth.Success then
         local XCSRF = Auth.Headers["x-csrf-token"];
         local ToRedeem = {"SPIDERCOLA","TWEETROBLOX"}
         local ToBuy = {}
@@ -95,9 +94,9 @@ if Freebies.WebStuff then
         for ID,CID in pairs(ToBuy) do
             request({Url = "https://economy.roblox.com/v1/purchases/products/"..ID; Body = "{\"expectedCurrency\":1,\"expectedPrice\":0,\"expectedSellerId\":1}"; Headers={["Content-Type"] = "application/json";["Cookie"]=".ROBLOSECURITY="..Cookie,["X-CSRF-TOKEN"]=XCSRF}; Method="POST"})
         end
-    --else
-    --    warn("Your cookie is invalid. Redeeming and purchasing skipped.")
-    --end
+    else
+        warn("Your cookie is invalid. Redeeming and purchasing skipped.")
+    end
 end
 
 Freebies.CheckGame(game.PlaceId)
