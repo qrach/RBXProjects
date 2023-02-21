@@ -20,18 +20,23 @@ local MPS = game:GetService("MarketplaceService")
 
 Freebies["CheckGame"] = function(ID)
     if Freebies.Assets[ID] then
+    	local AllOwned = true
         for _,Asset in pairs(Freebies.Assets[ID]) do
             local Owned = MPS:PlayerOwnsAsset(LocalPlayer,Asset)
             if not Owned then
-                local Idx = table.find(Freebies.Assets,ID)
-                for Idx2, _ in pairs(Freebies.Assets) do
-                	if Idx2 == Freebies.Assets[Idx+1] then
-						game:GetService("TeleportService"):Teleport(Idx2, LocalPlayer)
-						break
-					end
-				end
+            	AllOwned = false
+            	break
             end
         end
+        if AllOwned
+			local Idx = table.find(Freebies.Assets,ID)
+			for Idx2, _ in pairs(Freebies.Assets) do
+				if Idx2 == Freebies.Assets[Idx+1] then
+					game:GetService("TeleportService"):Teleport(Idx2, LocalPlayer)
+					break
+				end
+			end
+		end
     else
 		for Idx,_ in pairs(Freebies.Assets) do
 			game:GetService("TeleportService"):Teleport(Idx, LocalPlayer)
