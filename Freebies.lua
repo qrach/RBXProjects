@@ -28,7 +28,7 @@ Freebies["CheckGame"] = function(ID)
             	break
             end
         end
-        if AllOwned
+        if AllOwned then
 			local Idx = table.find(Freebies.Assets,ID)
 			for Idx2, _ in pairs(Freebies.Assets) do
 				if Idx2 == Freebies.Assets[Idx+1] then
