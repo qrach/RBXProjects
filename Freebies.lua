@@ -1,5 +1,7 @@
 local Cookie = "" -- ".ROBLOSECURITY"
-
+getgenv().Freebies = {
+    ["WebStuff"] = false;
+}
 if not getgenv().Freebies then
     getgenv().Freebies = {
         ["WebStuff"] = true;
@@ -21,12 +23,20 @@ Freebies["CheckGame"] = function(ID)
         for _,Asset in pairs(Freebies.Assets[ID]) do
             local Owned = MPS:PlayerOwnsAsset(LocalPlayer,Asset)
             if not Owned then
-                local Index = table.find(Freebies.Assets,ID)
-                game:GetService("TeleportService"):Teleport(Freebies.Assets[Index+1], LocalPlayer)
+                local Idx = table.find(Freebies.Assets,ID)
+                for Idx2, _ in pairs(Freebies.Assets) do
+                	if Idx2 == Freebies.Assets[Idx+1] then
+						game:GetService("TeleportService"):Teleport(Idx2, LocalPlayer)
+						break
+					end
+				end
             end
         end
     else
-        game:GetService("TeleportService"):Teleport(Freebies.Assets[0], LocalPlayer)
+		for Idx,_ in pairs(Freebies.Assets) do
+			game:GetService("TeleportService"):Teleport(Idx, LocalPlayer)
+			break
+		end
     end
 end
 
@@ -44,7 +54,6 @@ if Freebies.WebStuff then
             ["Cookie"] = ".ROBLOSECURITY="..Cookie,
         }
     });
-    print(Auth.Success)
 
     --if Auth.Success then
         local XCSRF = Auth.Headers["x-csrf-token"];
@@ -70,9 +79,9 @@ if Freebies.WebStuff then
         for ID,CID in pairs(ToBuy) do
             request({Url = "https://economy.roblox.com/v1/purchases/products/"..ID; Body = "{\"expectedCurrency\":1,\"expectedPrice\":0,\"expectedSellerId\":1}"; Headers={["Content-Type"] = "application/json";["Cookie"]=".ROBLOSECURITY="..Cookie,["X-CSRF-TOKEN"]=XCSRF}; Method="POST"})
         end
-    else
-        warn("Your cookie is invalid. Redeeming and purchasing skipped.")
-    end
+    --else
+    --    warn("Your cookie is invalid. Redeeming and purchasing skipped.")
+    --end
 end
 
 Freebies.CheckGame(game.PlaceId)
