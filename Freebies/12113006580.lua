@@ -1,3 +1,4 @@
+local LocalPlayer = game:GetService("Players").LocalPlayer
 if game.PlaceId == 12113006580 then
     local ReplicatedStorage = game:GetService("ReplicatedStorage")
     local Currency = LocalPlayer.PlayerGui.Currency.Amount
