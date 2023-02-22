@@ -73,7 +73,7 @@ end
 
 if Freebies["Buy&Redeem"] then
     local Auth = request({
-        Url = "https://auth.roblox.com/v1/account/pin",
+        Url = "https://auth.roblox.com/v2/logout",
         Method = "GET",
         Headers = {
             ["Content-Type"] = "application/json",
