@@ -4,12 +4,12 @@ https://roblox.fandom.com/wiki/Event
 --]]
 local Cookie = "" -- ".ROBLOSECURITY"
 getgenv().Freebies = {
-    ["WebStuff"] = false;
+    ["Buy&Redeem"] = false;
 }
 if not getgenv().Freebies then
     getgenv().Freebies = {}
 end
-if not Freebies.WebStuff then Freebies.WebStuff = true;
+if not Freebies.WebStuff then Freebies["Buy&Redeem"] = true;
 if not Freebies.AutoQueue then Freebies.AutoQueue = true;
 
 Freebies["Assets"] = {
@@ -18,14 +18,26 @@ Freebies["Assets"] = {
 }
 
 repeat task.wait() until game:IsLoaded()
-local LocalPlayer = game:GetService("Players").LocalPlayer
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
 local MPS = game:GetService("MarketplaceService")
+local HS = game:GetService("HttpService")
 
+local MPSMT = getrawmetatable(MPS)
+makewritable(MPSMT)
+MPSMT.__index:PlayerOwnsAsset(Player,AssetId)
+        assert(type(Player) == "userdata" and Player:IsA("Player"),"Arg1 (Player) must be a valid player instance.")
+        assert(type(tonumber(AID)) == "number" and AID == math.floor(UID) and pcall(function() MPS::GetProductInfo(AID) end),"Arg2 (AssetId) must be a valid asset integer value.")
+        local Owns = HS:JSONDecode(game:HttpGet("https://inventory.roblox.com/v1/users/"..Player.UserId.."/items/Asset/"..AID)).data[0]
+        if Owns then return true end
+        return false
+ end
+        
 Freebies["CheckGame"] = function(ID)
     if Freebies.Assets[ID] then
         local AllOwned = true
         for _, Asset in pairs(Freebies.Assets[ID]) do
-            local Owned = MPS:PlayerOwnsAsset(LocalPlayer, Asset)
+            local Owned = MPS:PlayerOwnsAsset(LocalPlayer,Asset)
             if not Owned then
                 AllOwned = false
                 break
@@ -59,8 +71,7 @@ if Freebies.AutoQueue then
     queue_on_teleport("getgenv().Freebies={[\"WebStuff\"]=false}; "..game:HttpGet("https://raw.githubusercontent.com/qrach/RBXProjects/main/Freebies.lua"))
 end
 
-if Freebies.WebStuff then
-    local HS = game:GetService("HttpService")
+if Freebies["Buy&Redeem"] then
     local Auth = request({
         Url = "https://auth.roblox.com/v1/account/pin",
         Method = "GET",
