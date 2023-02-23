@@ -72,7 +72,7 @@ end
 
 if Freebies["Buy&Redeem"] then
     local Auth = request({
-        Url = "https://auth.roblox.com/v2/login",
+        Url = "https://auth.roblox.com/",
         Method = "POST",
         Headers = {
             ["Content-Type"] = "application/json",
