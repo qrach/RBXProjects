@@ -9,28 +9,30 @@ getgenv().Freebies = {
 if not getgenv().Freebies then
     getgenv().Freebies = {}
 end
-
-repeat task.wait() until game:IsLoaded()
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-local MPS = game:GetService("MarketplaceService")
-local HS = game:GetService("HttpService")
-
 if not table.find(Freebies,"Buy&Redeem") then Freebies["Buy&Redeem"] = true end
 if not table.find(Freebies,"AutoQueue") then Freebies.AutoQueue = true end
 
 Freebies["Assets"] = {
     ["PlaceIndexes"] = {}
 }
-
 Freebies.AddAssets = function(PlaceId,AssetIds)
     assert(type(tonumber(PlaceId)) == "number" and tonumber(PlaceId) == math.floor(tonumber(PlaceId)),"Arg1 (PlaceId) must be a valid place integer value.")
-    assert(type(AssetIds) == "table" and pcall(function() for _,AssetId in pairs(AssetIds) do assert(type(tonumber(AssetId)) == "number" and tonumber(AssetId) == math.floor(tonumber(AssetId)),"") end end),"Arg2 (AssetIds) must be a valid asset integer value table.")
+    assert(type(AssetIds) == "table" and pcall(function()
+        for _,AssetId in pairs(AssetIds) do
+            assert(type(tonumber(AssetId)) == "number" and AssetId == math.floor(AssetId) and pcall(function() MPS:GetProductInfo(AssetId),"")
+        end
+    end),"Arg2 (AssetIds) must be a valid asset integer value table.")
     table.insert(Freebies["Assets"].PlaceIndexes,PlaceId)
-    table.insert(Freebies["Assets"],HS:JSONEncode(AssetIds))
+    table.insert(Freebies["Assets"],Assets)
 end
 Freebies.AddAssets("12113006580",{12179151373,12179171953})
 Freebies.AddAssets("11369456293",{12070984762,12070767156,12070503643,12070674965})
+
+repeat task.wait() until game:IsLoaded()
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local MPS = game:GetService("MarketplaceService")
+local HS = game:GetService("HttpService")
 
 local MPSMT = getrawmetatable(MPS)
 setreadonly(MPSMT,false)
@@ -46,20 +48,20 @@ rawset(MPSMT, "PlayerOwnsAsset", function(Player,AssetId)
 Freebies["CheckGame"] = function(ID)
     local AssetIndex = table.find(Freebies["Assets"]["PlaceIndexes"],tostring(ID))
     if AssetIndex then
-        local AssetIds = HS:JSONDecode(Freebies.Assets[AssetIndex])
+        local AssetIds = Freebies.Assets[AssetIndex]
         local AllOwned = true
-        for _, AssetId in pairs(AssetIds) do
+        for _, AssetId in ipairs(AssetIds) do
             local Owned = pcall(function() return MPS:PlayerOwnsAsset(LocalPlayer,AssetId) end)
             if not Owned then
                 AllOwned = false
                 break
-			end
+            end
         end
         if AllOwned then
             game:GetService("TeleportService"):Teleport(Freebies["Assets"]["PlaceIndexes"][AssetIndex+1],LocalPlayer)
         end
     else
-        game:GetService("TeleportService"):Teleport(Freebies["Assets"]["PlaceIndexes"][1], LocalPlayer)
+        game:GetService("TeleportService"):Teleport(Freebies["Assets"]["PlaceIndexes"][0], LocalPlayer)
     end
 end
 
