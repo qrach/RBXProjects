@@ -2,7 +2,6 @@
 loadstring(game:HttpGet("https://raw.githubusercontent.com/qrach/RBXProjects/main/Freebies.lua"))()
 https://roblox.fandom.com/wiki/Event
 --]]
-print('ho')
 local Cookie = "" -- ".ROBLOSECURITY"
 getgenv().Freebies = {
     ["Buy&Redeem"] = false;
@@ -10,8 +9,8 @@ getgenv().Freebies = {
 if not getgenv().Freebies then
     getgenv().Freebies = {}
 end
-if not Freebies["Buy&Redeem"] then Freebies["Buy&Redeem"] = true end
-if not Freebies.AutoQueue then Freebies.AutoQueue = true end
+if not table.find(Freebies,"Buy&Redeem") then Freebies["Buy&Redeem"] = true end
+if not table.find(Freebies,"AutoQueue") then Freebies.AutoQueue = true end
 
 Freebies["Assets"] = {
     ["g12113006580"] = {12179151373,12179171953};
