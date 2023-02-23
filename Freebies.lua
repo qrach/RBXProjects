@@ -25,10 +25,10 @@ local HS = game:GetService("HttpService")
 
 local MPSMT = getrawmetatable(MPS)
 setreadonly(MPSMT,false)
-rawset(MPSMT, "PlayerOwnsAsset", function(Player,AID)
+rawset(MPSMT, "PlayerOwnsAsset", function(Player,AssetId)
         assert(type(Player) == "userdata" and Player:IsA("Player"),"Arg1 (Player) must be a valid player instance.")
-        assert(type(tonumber(AID)) == "number" and AID == math.floor(AID) and pcall(function() MPS:GetProductInfo(AID) end),"Arg2 (AssetId) must be a valid asset integer value.")
-        local Owns = #HS:JSONDecode(game:HttpGet("https://inventory.roblox.com/v1/users/"..Player.UserId.."/items/Asset/"..AID)).data >= 1
+        assert(type(tonumber(AssetId)) == "number" and AssetId == math.floor(AssetId) and pcall(function() MPS:GetProductInfo(AssetId) end),"Arg2 (AssetId) must be a valid asset integer value.")
+        local Owns = #HS:JSONDecode(game:HttpGet("https://inventory.roblox.com/v1/users/"..Player.UserId.."/items/Asset/"..AssetId)).data >= 1
         if Owns then print('hi') return true end
         print('baller')
         return false
@@ -40,6 +40,8 @@ Freebies["CheckGame"] = function(ID)
         local AllOwned = true
         for _, Asset in pairs(Freebies.Assets[ID]) do
             local Owned = MPS:PlayerOwnsAsset(LocalPlayer,Asset)
+            print(Owned)
+            task.wait(5)
             if not Owned then
                 AllOwned = false
                 break
@@ -61,6 +63,8 @@ Freebies["CheckGame"] = function(ID)
             end
         end
     else
+		print("lolok nerd")
+		wait(5)
         for i, _ in pairs(Freebies.Assets) do
             game:GetService("TeleportService"):Teleport(i, LocalPlayer)
             break
