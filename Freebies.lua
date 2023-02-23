@@ -15,10 +15,16 @@ if not table.find(Freebies,"AutoQueue") then Freebies.AutoQueue = true end
 Freebies["Assets"] = {
     ["PlaceIndexes"] = {}
 }
-Freebies.AddAssets(PlaceId,AssetIds)
-    assert(type(tonumber(PlaceId)) == "number" and PlaceId == math.floor(PlaceId),"Arg1 (PlaceId) must be a valid place integer value.")
-    assert(type(AssetIds) == "table" and pcall(function() for _,AssetId in pairs(AssetIds) do assert(type(tonumber(AssetId)) == "number" and AssetId == math.floor(AssetId),"") end end) and pcall(function() MPS:GetProductInfo(AssetId) end),"number" and PlaceId == math.floor(PlaceId),"Arg2 (AssetIds) must be a valid asset integer value table.")
-    table.insert(["Assets"].PlaceIndexes,PlaceId)
+Freebies.AddAssets = function(PlaceId,AssetIds)
+    assert(type(tonumber(PlaceId)) == "number" and tonumber(PlaceId) == math.floor(tonumber(PlaceId)),"Arg1 (PlaceId) must be a valid place integer value.")
+    assert(type(AssetIds) == "table" and pcall(function()
+        for _,AssetId in pairs(AssetIds) do
+            assert(type(tonumber(AssetId)) == "number" and tonumber(AssetId) == math.floor(tonumber(AssetId)) and pcall(function()
+            	return MPS:GetProductInfo(tonumber(AssetId))
+            end),"")
+        end
+    end),"Arg2 (AssetIds) must be a valid asset integer value table.")
+    table.insert(Freebies["Assets"].PlaceIndexes,PlaceId)
     table.insert(Freebies["Assets"],Assets)
 end
 Freebies.AddAssets("12113006580",{12179151373,12179171953})
