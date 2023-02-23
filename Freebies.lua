@@ -9,8 +9,8 @@ getgenv().Freebies = {
 if not getgenv().Freebies then
     getgenv().Freebies = {}
 end
-if not Freebies.WebStuff then Freebies["Buy&Redeem"] = true;
-if not Freebies.AutoQueue then Freebies.AutoQueue = true;
+if not Freebies.WebStuff then Freebies["Buy&Redeem"] = true end
+if not Freebies.AutoQueue then Freebies.AutoQueue = true end
 
 Freebies["Assets"] = {
     ["12113006580"] = {12179151373,12179171953};
@@ -24,14 +24,15 @@ local MPS = game:GetService("MarketplaceService")
 local HS = game:GetService("HttpService")
 
 local MPSMT = getrawmetatable(MPS)
-makewritable(MPSMT)
-MPSMT.__index:PlayerOwnsAsset(Player,AssetId)
+setreadonly(MPSMT,false)
+rawset(MPSMT, "PlayerOwnsAsset", function(Player,AssetId)
         assert(type(Player) == "userdata" and Player:IsA("Player"),"Arg1 (Player) must be a valid player instance.")
-        assert(type(tonumber(AID)) == "number" and AID == math.floor(UID) and pcall(function() MPS::GetProductInfo(AID) end),"Arg2 (AssetId) must be a valid asset integer value.")
+        assert(type(tonumber(AID)) == "number" and AID == math.floor(AID) and pcall(function() MPS:GetProductInfo(AID) end),"Arg2 (AssetId) must be a valid asset integer value.")
         local Owns = HS:JSONDecode(game:HttpGet("https://inventory.roblox.com/v1/users/"..Player.UserId.."/items/Asset/"..AID)).data[0]
-        if Owns then return true end
+        if Owns then print('hi') return true end
         return false
- end
+ end)
+ setreadonly(MPSMT,true)
         
 Freebies["CheckGame"] = function(ID)
     if Freebies.Assets[ID] then
