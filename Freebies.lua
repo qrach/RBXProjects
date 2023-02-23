@@ -13,9 +13,16 @@ if not table.find(Freebies,"Buy&Redeem") then Freebies["Buy&Redeem"] = true end
 if not table.find(Freebies,"AutoQueue") then Freebies.AutoQueue = true end
 
 Freebies["Assets"] = {
-    ["g12113006580"] = {12179151373,12179171953};
-    ["g11369456293"] = {12070984762,12070767156,12070503643,12070674965}
+    ["PlaceIndexes"] = {}
 }
+Freebies.AddAssets(PlaceId,AssetIds)
+    assert(type(tonumber(PlaceId)) == "number" and PlaceId == math.floor(PlaceId),"Arg1 (PlaceId) must be a valid place integer value.")
+    assert(type(AssetIds) == "table" and pcall(function() for _,AssetId in pairs(AssetIds) do assert(type(tonumber(AssetId)) == "number" and AssetId == math.floor(AssetId),"") end end) and pcall(function() MPS:GetProductInfo(AssetId) end),"number" and PlaceId == math.floor(PlaceId),"Arg2 (AssetIds) must be a valid asset integer value table.")
+    table.insert(["Assets"].PlaceIndexes,PlaceId)
+    table.insert(Freebies["Assets"],Assets)
+end
+Freebies.AddAssets("12113006580",{12179151373,12179171953})
+Freebies.AddAssets("11369456293",{12070984762,12070767156,12070503643,12070674965})
 
 repeat task.wait() until game:IsLoaded()
 local Players = game:GetService("Players")
@@ -36,34 +43,22 @@ rawset(MPSMT, "PlayerOwnsAsset", function(Player,AssetId)
  setreadonly(MPSMT,true)
         
 Freebies["CheckGame"] = function(ID)
-    if Freebies.Assets["g"..tostring(ID)] then
+    local AssetIndex = table.find(Freebies["Assets"]["PlaceIndexes"],tostring(ID))
+    if AssetIndex then
+        local AssetIds = Freebies.Assets[AssetIndex]
         local AllOwned = true
-        for _, Asset in pairs(Freebies.Assets["g"..tostring(ID)]) do
-            local Owned = pcall(function() return MPS:PlayerOwnsAsset(LocalPlayer,Asset) end)
+        for _, AssetId in ipairs(AssetIds) do
+            local Owned = pcall(function() return MPS:PlayerOwnsAsset(LocalPlayer,AssetId) end)
             if not Owned then
                 AllOwned = false
                 break
             end
         end
         if AllOwned then
-            local Idx = table.find(Freebies.Assets,Freebies.Assets["g"..tostring(ID)])
-            print(
-            for i, _ in pairs(Freebies.Assets) do
-                if i == Freebies.Assets[tostring(Idx + 1)] then
-                	print(Idx)
-                    --game:GetService("TeleportService"):Teleport(i, LocalPlayer)
-                    break
-                end
-            end
+            game:GetService("TeleportService"):Teleport(Freebies["Assets"]["PlaceIndexes"][AssetIndex+1],LocalPlayer)
         end
     else
-		print("lolok nerd")
-		print(ID,Freebies.Assets[0])
-		--wait(30)
-        for i, _ in pairs(Freebies.Assets) do
-            --game:GetService("TeleportService"):Teleport(i, LocalPlayer)
-            break
-        end
+        game:GetService("TeleportService"):Teleport(Freebies["Assets"]["PlaceIndexes"][0], LocalPlayer)
     end
 end
 
