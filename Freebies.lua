@@ -39,7 +39,7 @@ Freebies["CheckGame"] = function(ID)
     if Freebies.Assets[ID] then
         local AllOwned = true
         for _, Asset in pairs(Freebies.Assets[ID]) do
-            local Owned = MPS:PlayerOwnsAsset(LocalPlayer,Asset)
+            local Owned = pcall(function() return MPS:PlayerOwnsAsset(LocalPlayer,Asset) end)
             print(Owned)
             task.wait(5)
             if not Owned then
