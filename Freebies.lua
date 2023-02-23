@@ -3,9 +3,6 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/qrach/RBXProjects/mai
 https://roblox.fandom.com/wiki/Event
 --]]
 local Cookie = "" -- ".ROBLOSECURITY"
-getgenv().Freebies = {
-    ["Buy&Redeem"] = false;
-}
 if not getgenv().Freebies then
     getgenv().Freebies = {}
 end
@@ -33,17 +30,38 @@ local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local MPS = game:GetService("MarketplaceService")
 local HS = game:GetService("HttpService")
+local MPS = game:GetService("MPS")
 
-local MPSMT = getrawmetatable(MPS)
-setreadonly(MPSMT,false)
-rawset(MPSMT, "PlayerOwnsAsset", function(Player,AssetId)
+local OldNC 
+OldNC = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
+    local NameCallMethod = getnamecallmethod()
+    local Args = {...}
+    if self == MPS and NameCallMethod == "PlayerOwnsAsset" and #Args == 2 then
+	local Player = Args[1]
+	local AssetId = Args[2]
         assert(type(Player) == "userdata" and Player:IsA("Player"),"Arg1 (Player) must be a valid player instance.")
         assert(type(tonumber(AssetId)) == "number" and AssetId == math.floor(AssetId) and pcall(function() MPS:GetProductInfo(AssetId) end),"Arg2 (AssetId) must be a valid asset integer value.")
         local Owns = #HS:JSONDecode(game:HttpGet("https://inventory.roblox.com/v1/users/"..Player.UserId.."/items/Asset/"..AssetId)).data >= 1
         if Owns then return true end
         return false
- end)
- setreadonly(MPSMT,true)
+    end
+    return OldNC(self, ...)
+end))
+
+local OldPOA
+OldPOA = hookfunction(MPS.PlayerOwnsAsset, newcclosure(function(self, ...)
+    local Args = {...}
+    if self == MPS and #Args == 2 then
+	local Player = Args[1]
+	local AssetId = Args[2]
+        assert(type(Player) == "userdata" and Player:IsA("Player"),"Arg1 (Player) must be a valid player instance.")
+        assert(type(tonumber(AssetId)) == "number" and AssetId == math.floor(AssetId) and pcall(function() MPS:GetProductInfo(AssetId) end),"Arg2 (AssetId) must be a valid asset integer value.")
+        local Owns = #HS:JSONDecode(game:HttpGet("https://inventory.roblox.com/v1/users/"..Player.UserId.."/items/Asset/"..AssetId)).data >= 1
+        if Owns then return true end
+        return false
+    end
+    return OldPOA(self, ...)
+end))
         
 Freebies["CheckGame"] = function(ID)
     local AssetIndex = table.find(Freebies["Assets"]["PlaceIndexes"],tostring(ID))
@@ -71,42 +89,54 @@ if Freebies.AutoQueue then
 end
 
 if Freebies["Buy&Redeem"] then
-    local Auth = request({
-        Url = "https://auth.roblox.com/",
-        Method = "POST",
-        Headers = {
-            ["Content-Type"] = "application/json",
-            ["Cookie"] = ".ROBLOSECURITY="..Cookie,
-        }
-    });
-
-    if Auth.Success then
-        local XCSRF = Auth.Headers["x-csrf-token"];
-        local ToRedeem = {"SPIDERCOLA","TWEETROBLOX"}
-        local ToBuy = {}
-        local Cursor = ""
-
-        repeat
-            local Products = HS:JSONDecode(game:HttpGet("https://catalog.roblox.com/v1/search/items/details?Category=11&Subcategory=19&MaxPrice=0&Limit=30&Cursor="..Cursor))
-            Cursor = Products.nextPageCursor
-            for _,Product in pairs(Products.data) do
-                if table.find(ToBuy,Product.productId) then
-                    Cursor = ""
-                    break
-                else
-                    ToBuy[Product.productId] = Product.creatorTargetId
-                end
-            end
-            if #Products.data < 30 then
-                Cursor = ""
-            end
-        until Cursor == ""
-        for ID,CID in pairs(ToBuy) do
-            request({Url = "https://economy.roblox.com/v1/purchases/products/"..ID; Body = "{\"expectedCurrency\":1,\"expectedPrice\":0,\"expectedSellerId\":1}"; Headers={["Content-Type"] = "application/json";["Cookie"]=".ROBLOSECURITY="..Cookie,["X-CSRF-TOKEN"]=XCSRF}; Method="POST"})
-        end
-    else
-        warn("Your cookie is invalid. Redeeming and purchasing skipped.")
-    end
+	local Auth = request({Url = "https://billing.roblox.com/v1/promocodes/redeem", Method = "POST",
+		Headers = {["Content-Type"] = "application/json", ["Cookie"] = ".ROBLOSECURITY="..Cookie,
+		}
+	});
+	if Auth.Headers["x-csrf-token"] then
+		local XCSRF = Auth.Headers["x-csrf-token"];
+		local ToRedeem = {["SPIDERCOLA"]=1,["TWEETROBLOX"]=1}
+		for Code,Asset in pairs(ToRedeem) do
+			request({
+			Url = "https://billing.roblox.com/v1/promocodes/redeem",
+			Body = "{code:\""..Code.."\"}",
+			Headers = {
+					["Content-Type"] = "application/json",
+					["Cookie"] = ".ROBLOSECURITY="..Cookie,
+				}
+			}
+		end
+		Method = "POST");
+		local ToBuy = {}
+		local Cursor = ""
+		repeat
+			local Products = HS:JSONDecode(game:HttpGet("https://catalog.roblox.com/v2/search/items/details?Category=1&CreatorType=1&CreatorTargetId=1&MaxPrice=0&Limit=30&Cursor="..Cursor)).data
+			Cursor = Products.nextPageCursor
+			for _,Product in pairs(Products) do
+				if table.find(ToBuy,Product.productId) then
+					Cursor = ""
+					break
+				else
+					ToBuy[Product.productId] = {["AssetId"]=Product.id,["CreatorId"]=Product.creatorTargetId}
+				end
+			end
+			if #Products < 30 then
+				Cursor = ""
+			end
+		until Cursor == ""
+		for ID,Info in pairs(ToBuy) do
+			if not (#HS:JSONDecode(game:HttpGet("https://inventory.roblox.com/v1/users/"..LocalPlayer.UserId.."/items/Asset/"..Info.AssetId)).data >= 1) then
+				local Owned = false
+				repeat
+					wait(1)
+					local Response = request({Url = "https://economy.roblox.com/v1/purchases/products/"..ID; Body = "{\"expectedCurrency\":1,\"expectedPrice\":0,\"expectedSellerId\":"..Info.CreatorId.."}"; Headers={["Content-Type"] = "application/json";["Cookie"]=".ROBLOSECURITY="..Cookie,["X-CSRF-TOKEN"]=XCSRF}; Method="POST"})
+					if HS:JSONDecode(Response.Body).statusCode then Owned = true end
+				until Owned == true
+			end
+		end
+	else
+		warn("Your cookie is invalid. Redeeming and purchasing skipped.")
+	end
 end
 
 Freebies.CheckGame(game.PlaceId)
