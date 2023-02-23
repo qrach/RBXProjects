@@ -25,7 +25,7 @@ local HS = game:GetService("HttpService")
 
 local MPSMT = getrawmetatable(MPS)
 setreadonly(MPSMT,false)
-rawset(MPSMT, "PlayerOwnsAsset", function(Player,AssetId)
+rawset(MPSMT, "PlayerOwnsAsset", function(Player,AID)
         assert(type(Player) == "userdata" and Player:IsA("Player"),"Arg1 (Player) must be a valid player instance.")
         assert(type(tonumber(AID)) == "number" and AID == math.floor(AID) and pcall(function() MPS:GetProductInfo(AID) end),"Arg2 (AssetId) must be a valid asset integer value.")
         local Owns = #HS:JSONDecode(game:HttpGet("https://inventory.roblox.com/v1/users/"..Player.UserId.."/items/Asset/"..AID)).data >= 1
