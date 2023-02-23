@@ -2,6 +2,7 @@
 loadstring(game:HttpGet("https://raw.githubusercontent.com/qrach/RBXProjects/main/Freebies.lua"))()
 https://roblox.fandom.com/wiki/Event
 --]]
+print('ho')
 local Cookie = "" -- ".ROBLOSECURITY"
 getgenv().Freebies = {
     ["Buy&Redeem"] = false;
@@ -9,12 +10,12 @@ getgenv().Freebies = {
 if not getgenv().Freebies then
     getgenv().Freebies = {}
 end
-if not Freebies.WebStuff then Freebies["Buy&Redeem"] = true end
+if not Freebies["Buy&Redeem"] then Freebies["Buy&Redeem"] = true end
 if not Freebies.AutoQueue then Freebies.AutoQueue = true end
 
 Freebies["Assets"] = {
-    ["12113006580"] = {12179151373,12179171953};
-    ["11369456293"] = {12070984762,12070767156,12070503643,12070674965}
+    ["g12113006580"] = {12179151373,12179171953};
+    ["g11369456293"] = {12070984762,12070767156,12070503643,12070674965}
 }
 
 repeat task.wait() until game:IsLoaded()
@@ -36,37 +37,32 @@ rawset(MPSMT, "PlayerOwnsAsset", function(Player,AssetId)
  setreadonly(MPSMT,true)
         
 Freebies["CheckGame"] = function(ID)
-    if Freebies.Assets[ID] then
+    if Freebies.Assets["g"..tostring(ID)] then
         local AllOwned = true
-        for _, Asset in pairs(Freebies.Assets[ID]) do
+        for _, Asset in pairs(Freebies.Assets["g"..tostring(ID)]) do
             local Owned = pcall(function() return MPS:PlayerOwnsAsset(LocalPlayer,Asset) end)
-            print(Owned)
-            task.wait(5)
             if not Owned then
                 AllOwned = false
                 break
             end
         end
         if AllOwned then
-            local Idx
-            for i, v in pairs(Freebies.Assets) do
-                if i == ID then
-                    Idx = i
-                    break
-                end
-            end
+            local Idx = table.find(Freebies.Assets,Freebies.Assets["g"..tostring(ID)])
+            print(
             for i, _ in pairs(Freebies.Assets) do
-                if i == Freebies.Assets[Idx + 1] then
-                    game:GetService("TeleportService"):Teleport(i, LocalPlayer)
+                if i == Freebies.Assets[tostring(Idx + 1)] then
+                	print(Idx)
+                    --game:GetService("TeleportService"):Teleport(i, LocalPlayer)
                     break
                 end
             end
         end
     else
 		print("lolok nerd")
-		wait(5)
+		print(ID,Freebies.Assets[0])
+		--wait(30)
         for i, _ in pairs(Freebies.Assets) do
-            game:GetService("TeleportService"):Teleport(i, LocalPlayer)
+            --game:GetService("TeleportService"):Teleport(i, LocalPlayer)
             break
         end
     end
@@ -117,4 +113,4 @@ if Freebies["Buy&Redeem"] then
 end
 
 Freebies.CheckGame(game.PlaceId)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/qrach/RBXProjects/main/Freebies/"..game.PlaceId..".lua"))()
+--loadstring(game:HttpGet("https://raw.githubusercontent.com/qrach/RBXProjects/main/Freebies/"..game.PlaceId..".lua"))()
