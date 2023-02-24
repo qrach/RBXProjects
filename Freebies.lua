@@ -79,8 +79,8 @@ OldPOA = hookfunction(MPS.PlayerOwnsAsset, newcclosure(function(self, ...)
 	return OldPOA(self, ...)
 end))
 
-function Freebies:Initialize(ID)
-	local AssetIndex = table.find(Freebies["Assets"]["PlaceIndexes"],tonumber(ID))
+function Freebies:Initialize()
+	local AssetIndex = table.find(Freebies["Assets"]["PlaceIndexes"],game.PlaceId)
 	if AssetIndex then
 		local AssetIds = Freebies.Assets[AssetIndex]
 		local AllOwned = true
@@ -144,7 +144,7 @@ if Freebies["Buy&Redeem"] then
 	end
 end
 
-Freebies.Initialize(game.PlaceId)
+Freebies.Initialize()
 if table.find(Freebies["Assets"].PlaceIndexes,game.PlaceId) then
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/qrach/RBXProjects/main/Freebies/"..game.PlaceId..".lua"))()
 end
