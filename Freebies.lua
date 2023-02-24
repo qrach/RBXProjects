@@ -11,7 +11,15 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/qrach/RBXProjects/mai
 https://roblox.fandom.com/wiki/Event
 --]]
 
+repeat task.wait() until game:IsLoaded()
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local MPS = game:GetService("MarketplaceService")
+local HS = game:GetService("HttpService")
+local MPS = game:GetService("MarketplaceService")
+
 if getgenv().Freebies then
+	if type(Freebies) == "string" then Freebies = HS:JSONDecode(Freebies) end
 	if not type(Freebies["Buy&Redeem"]) == "boolean" then Freebies["Buy&Redeem"] = true end
 	if not type(Freebies["AutoQueue"]) == "boolean" then Freebies.AutoQueue = true end
 	if not type(Freebies["Cookie"]) then Freebies["Buy&Redeem"] = false end
@@ -38,13 +46,6 @@ function Freebies:AddAssets(PlaceId,AssetIds)
 end
 Freebies:AddAssets("12113006580",{12179151373,12179171953})
 Freebies:AddAssets("11369456293",{12070984762,12070767156,12070503643,12070674965})
-
-repeat task.wait() until game:IsLoaded()
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-local MPS = game:GetService("MarketplaceService")
-local HS = game:GetService("HttpService")
-local MPS = game:GetService("MarketplaceService")
 
 local OldNC 
 OldNC = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
@@ -77,7 +78,7 @@ OldPOA = hookfunction(MPS.PlayerOwnsAsset, newcclosure(function(self, ...)
 	end
 	return OldPOA(self, ...)
 end))
-	
+
 function Freebies:Initialize(ID)
 	local AssetIndex = table.find(Freebies["Assets"]["PlaceIndexes"],tonumber(ID))
 	if AssetIndex then
@@ -99,7 +100,7 @@ end
 
 
 if Freebies.AutoQueue then
-	queue_on_teleport("getgenv().Freebies="..HS:JSONEncode(Freebies).."; "..game:HttpGet("https://raw.githubusercontent.com/qrach/RBXProjects/main/Freebies.lua"))
+	queue_on_teleport("getgenv().Freebies=\""..HS:JSONEncode(Freebies).."\"; "..game:HttpGet("https://raw.githubusercontent.com/qrach/RBXProjects/main/Freebies.lua"))
 end
 
 if Freebies["Buy&Redeem"] then
