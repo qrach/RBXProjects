@@ -93,7 +93,7 @@ function Freebies:Initialize(ID)
 			game:GetService("TeleportService"):Teleport(Freebies["Assets"]["PlaceIndexes"][AssetIndex+1],LocalPlayer)
 		end
 	end
-	game:GetService("TeleportService"):Teleport(Freebies["Assets"]["PlaceIndexes"][0], LocalPlayer)
+	game:GetService("TeleportService"):Teleport(Freebies["Assets"]["PlaceIndexes"][1], LocalPlayer)
 end
 
 
