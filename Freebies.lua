@@ -17,7 +17,7 @@ if getgenv().Freebies then
 	if not type(Freebies["Cookie"]) then Freebies["Buy&Redeem"] = false end
 else
 	getgenv().Freebies = {
-		["Buy&Redeem"] = true; --boolean
+		["Buy&Redeem"] = false; --boolean
 		["AutoQueue"] = true; --boolean
 		["Cookie"] = ""; --string, .ROBLOSECURITY
 	}
@@ -71,6 +71,7 @@ OldPOA = hookfunction(MPS.PlayerOwnsAsset, newcclosure(function(self, ...)
 		assert(type(Player) == "userdata" and Player:IsA("Player"),"Arg1 (Player) must be a valid player instance.")
 		assert(type(tonumber(AssetId)) == "number" and AssetId == math.floor(AssetId),"Arg2 (AssetId) must be a valid asset integer value.")
 		local Owns = #HS:JSONDecode(game:HttpGet("https://inventory.roblox.com/v1/users/"..Player.UserId.."/items/Asset/"..AssetId)).data >= 1
+		print(Owns)
 		if Owns then return true end
 		return false
 	end
@@ -78,7 +79,7 @@ OldPOA = hookfunction(MPS.PlayerOwnsAsset, newcclosure(function(self, ...)
 end))
 	
 function Freebies:Initialize(ID)
-	local AssetIndex = table.find(Freebies["Assets"]["PlaceIndexes"],tostring(ID))
+	local AssetIndex = table.find(Freebies["Assets"]["PlaceIndexes"],tonumber(ID))
 	if AssetIndex then
 		local AssetIds = Freebies.Assets[AssetIndex]
 		local AllOwned = true
