@@ -14,7 +14,7 @@ https://roblox.fandom.com/wiki/Event
 if getgenv().Freebies then
 	if not type(Freebies["Buy&Redeem"]) == "boolean" then Freebies["Buy&Redeem"] = true end
 	if not type(Freebies["AutoQueue"]) == "boolean" then Freebies.AutoQueue = true end
-	if not type(Freebies["Cookie"] then Freebies["Buy&Redeem"] = false end
+	if not type(Freebies["Cookie"]) then Freebies["Buy&Redeem"] = false end
 else
 	getgenv().Freebies = {
 		["Buy&Redeem"] = true; --boolean
