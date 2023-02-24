@@ -1,4 +1,5 @@
 local LocalPlayer = game:GetService("Players").LocalPlayer
+local MPS = game:GetService("MarketplaceService")
 if game.PlaceId == 11369456293 then
     local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:wait()
     LocalPlayer.CharacterAdded:Connect(function(NewCharacter)
