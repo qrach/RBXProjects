@@ -1,18 +1,26 @@
 --[[
+
+Usage Example:
+getgenv().Freebies = {
+	["Buy&Redeem"] = true; --boolean
+	["AutoQueue"] = true; --boolean
+	["Cookie"] = "_|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_roblosecurityhere"; --string, .ROBLOSECURITY
+}
 loadstring(game:HttpGet("https://raw.githubusercontent.com/qrach/RBXProjects/main/Freebies.lua"))()
+
 https://roblox.fandom.com/wiki/Event
 --]]
-	
+
 if getgenv().Freebies then
 	if not type(Freebies["Buy&Redeem"]) == "boolean" then Freebies["Buy&Redeem"] = true end
 	if not type(Freebies["AutoQueue"]) == "boolean" then Freebies.AutoQueue = true end
-	if not Freebies["Cookie"] then Freebies["Buy&Redeem"] = false end
+	if not type(Freebies["Cookie"] then Freebies["Buy&Redeem"] = false end
 else
 	getgenv().Freebies = {
-	["Buy&Redeem"];
-	["AutoQueue"];
-	["Cookie"];
-}
+		["Buy&Redeem"] = true; --boolean
+		["AutoQueue"] = true; --boolean
+		["Cookie"] = ""; --string, .ROBLOSECURITY
+	}
 end
 
 Freebies["Assets"] = {
@@ -90,7 +98,7 @@ end
 
 
 if Freebies.AutoQueue then
-	queue_on_teleport("getgenv().Freebies={[\"WebStuff\"]=false}; "..game:HttpGet("https://raw.githubusercontent.com/qrach/RBXProjects/main/Freebies.lua"))
+	queue_on_teleport("getgenv().Freebies="..HS:JSONEncode(Freebies).."; "..game:HttpGet("https://raw.githubusercontent.com/qrach/RBXProjects/main/Freebies.lua"))
 end
 
 if Freebies["Buy&Redeem"] then
