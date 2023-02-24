@@ -1,5 +1,7 @@
+repeat task.wait() until game:IsLoaded()
 local LocalPlayer = game:GetService("Players").LocalPlayer
 if game.PlaceId == 12113006580 then
+    local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:wait()
     local ReplicatedStorage = game:GetService("ReplicatedStorage")
     local Currency = LocalPlayer.PlayerGui.Currency.Amount
     for _,Reward in pairs(workspace.Folder:GetChildren()) do
@@ -28,7 +30,7 @@ if game.PlaceId == 12113006580 then
         ReplicatedStorage.Packages._Index["sleitnick_knit@1.4.7"].knit.Services.ShopService.RE.PurchaseItem:FireServer("Accessories", "008")
         ReplicatedStorage.Packages._Index["sleitnick_knit@1.4.7"].knit.Services.ShopService.RE.PurchaseItem:FireServer("Accessories", "007")
     else
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/qrach/RBXProjects/main/Freebies/"..game.PlaceId..".lua"))()
+        queue_on_teleport(game:HttpGet("https://raw.githubusercontent.com/qrach/RBXProjects/main/Freebies/"..game.PlaceId..".lua"))
         game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId, LocalPlayer)
     end
 end
