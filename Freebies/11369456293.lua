@@ -101,4 +101,8 @@ if game.PlaceId == 11369456293 then
         repeat task.wait() until LocalPlayer.PlayerGui.WinnerGui.Enabled
     until Wins >= TargetWins and Scores >= TargetScores and Games >= TargetGames
     Character.PrimaryPart.Anchored = false
+    if getgenv().Freebies then
+        local AssetIndex = table.find(Freebies["Assets"]["PlaceIndexes"], game.PlaceId)
+        game:GetService("TeleportService"):Teleport(Freebies["Assets"]["PlaceIndexes"][AssetIndex+1], LocalPlayer)
+    end
 end
