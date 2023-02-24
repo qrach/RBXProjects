@@ -94,8 +94,10 @@ function Freebies:Initialize(ID)
 		if AllOwned then
 			game:GetService("TeleportService"):Teleport(Freebies["Assets"]["PlaceIndexes"][AssetIndex+1],LocalPlayer)
 		end
+	else
+		game:GetService("TeleportService"):Teleport(Freebies["Assets"]["PlaceIndexes"][1], LocalPlayer)
+
 	end
-	game:GetService("TeleportService"):Teleport(Freebies["Assets"]["PlaceIndexes"][1], LocalPlayer)
 end
 
 
