@@ -4,7 +4,7 @@ if game.PlaceId == 12113006580 then
     local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:wait()
     repeat task.wait() until Character.PrimaryPart
     local ReplicatedStorage = game:GetService("ReplicatedStorage")
-    local Currency = LocalPlayer.PlayerGui.Currency.Amount
+    local Currency = LocalPlayer.PlayerGui:WaitForChild("Currency"):WaitForChild("Amount")
     for _,Reward in pairs(workspace.Folder:GetChildren()) do
         local Current = tonumber(Currency.Text)
         if not (Current >= 22550) then
