@@ -4,7 +4,7 @@ Usage Example:
 getgenv().Freebies = {
 	["Buy&Redeem"] = true; --boolean
 	["AutoQueue"] = true; --boolean
-	["Cookie"] = "_|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_roblosecurityhere"; --string, .ROBLOSECURITY
+	["Cookie"] = "_|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_"; --string, .ROBLOSECURITY
 }
 loadstring(game:HttpGet("https://raw.githubusercontent.com/qrach/RBXProjects/main/Freebies.lua"))()
 
@@ -30,7 +30,7 @@ function Freebies:AddAssets(PlaceId,AssetIds)
 	assert(type(tonumber(PlaceId)) == "number" and tonumber(PlaceId) == math.floor(tonumber(PlaceId)) and not table.find(Freebies["Assets"].PlaceIndexes,PlaceId),"Arg1 (PlaceId) must be a valid place integer value.")
 	assert(type(AssetIds) == "table" and pcall(function()
 		for _,AssetId in pairs(AssetIds) do
-			assert(type(tonumber(AssetId)) == "number" and AssetId == math.floor(AssetId) and pcall(function() return MPS:GetProductInfo(AssetId) end),"")
+			assert(type(tonumber(AssetId)) == "number" and AssetId == math.floor(AssetId),"")
 		end
 	end),"Arg2 (AssetIds) must be a valid asset integer value table.")
 	table.insert(Freebies["Assets"].PlaceIndexes,PlaceId)
@@ -69,7 +69,7 @@ OldPOA = hookfunction(MPS.PlayerOwnsAsset, newcclosure(function(self, ...)
 		local Player = Args[1]
 		local AssetId = Args[2]
 		assert(type(Player) == "userdata" and Player:IsA("Player"),"Arg1 (Player) must be a valid player instance.")
-		assert(type(tonumber(AssetId)) == "number" and AssetId == math.floor(AssetId) and pcall(function() MPS:GetProductInfo(AssetId) end),"Arg2 (AssetId) must be a valid asset integer value.")
+		assert(type(tonumber(AssetId)) == "number" and AssetId == math.floor(AssetId),"Arg2 (AssetId) must be a valid asset integer value.")
 		local Owns = #HS:JSONDecode(game:HttpGet("https://inventory.roblox.com/v1/users/"..Player.UserId.."/items/Asset/"..AssetId)).data >= 1
 		if Owns then return true end
 		return false
