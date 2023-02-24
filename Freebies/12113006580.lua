@@ -30,6 +30,10 @@ if game.PlaceId == 12113006580 then
     if tonumber(Currency.Text) >= 22550 then
         ReplicatedStorage.Packages._Index["sleitnick_knit@1.4.7"].knit.Services.ShopService.RE.PurchaseItem:FireServer("Accessories", "008")
         ReplicatedStorage.Packages._Index["sleitnick_knit@1.4.7"].knit.Services.ShopService.RE.PurchaseItem:FireServer("Accessories", "007")
+        if getgenv().Freebies then
+            local AssetIndex = table.find(Freebies["Assets"]["PlaceIndexes"], game.PlaceId)
+            game:GetService("TeleportService"):Teleport(Freebies["Assets"]["PlaceIndexes"][AssetIndex+1], LocalPlayer)
+        end
     else
         queue_on_teleport(game:HttpGet("https://raw.githubusercontent.com/qrach/RBXProjects/main/Freebies/"..game.PlaceId..".lua"))
         task.wait(1)
