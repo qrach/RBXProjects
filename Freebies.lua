@@ -40,6 +40,7 @@ function Freebies:AddAssets(PlaceId,AssetIds)
 		for _,AssetId in pairs(AssetIds) do
 			assert(type(tonumber(AssetId)) == "number" and AssetId == math.floor(AssetId),"")
 		end
+		return true
 	end),"Arg2 (AssetIds) must be a valid asset integer value table.")
 	table.insert(Freebies["Assets"].PlaceIndexes,PlaceId)
 	table.insert(Freebies["Assets"],Assets)
