@@ -140,7 +140,7 @@ if Freebies["Buy&Redeem"] then
 			end
 		end
 	else
-		warn("Your Freebies.Cookie is invalid. Redeeming and purchasing skipped.")
+		warn("Your Cookie is invalid. Redeeming and purchasing skipped.")
 	end
 end
 
