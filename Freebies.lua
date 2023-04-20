@@ -6,7 +6,7 @@ getgenv().Freebies = {
 	["AutoQueue"] = true; --boolean
 	["Cookie"] = "_|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_"; --string, .ROBLOSECURITY
 }
-loadstring(game:HttpGet("https://raw.githubusercontent.com/qrach/RBXProjects/main/Freebies.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/qrach/Freebies/main/Freebies.lua"))()
 
 https://roblox.fandom.com/wiki/Event
 --]]
@@ -103,7 +103,7 @@ end
 
 
 if Freebies.AutoQueue then
-	queue_on_teleport("getgenv().Freebies=\""..HS:JSONEncode(Freebies).."\"; "..game:HttpGet("https://raw.githubusercontent.com/qrach/RBXProjects/main/Freebies.lua"))
+	queue_on_teleport("getgenv().Freebies=\""..HS:JSONEncode(Freebies).."\"; "..game:HttpGet("https://raw.githubusercontent.com/qrach/Freebies/main/Freebies.lua"))
 end
 
 if Freebies["Buy&Redeem"] then
@@ -147,5 +147,5 @@ end
 
 Freebies.Initialize()
 if table.find(Freebies["Assets"].PlaceIndexes,game.PlaceId) then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/qrach/RBXProjects/main/Freebies/"..game.PlaceId..".lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/qrach/Freebies/main/Games/"..game.PlaceId..".lua"))()
 end
